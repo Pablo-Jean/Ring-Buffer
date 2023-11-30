@@ -28,7 +28,7 @@ RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, uint8_t ElemSize, uint32_t Ri
 	handle->ElemSize = ElemSize;
 	handle->RingLen = RingLen;
 	if (buffer == NULL){
-		handle->Ring = malloc(RingLen*(ElemSize*8));
+		handle->Ring = malloc(RingLen*ElemSize);
 		if (handle->Ring == NULL){
 			return RINGBUFFER_FAIL;
 		}
