@@ -16,7 +16,7 @@
  * Publics
  */
 
-RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, uint8_t ElemSize, uint32_t RingLen, void *buffer){
+RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, size_t ElemSize, uint32_t RingLen, void *buffer){
 	if (handle == NULL){
 		return RINGBUFFER_UNKNOWN;
 	}
@@ -24,10 +24,18 @@ RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, uint8_t ElemSize, uint32_t Ri
 		return RINGBUFFER_ALREADY_INIT;
 	}
 
+	// check if size of element is zero (invalud value)
+	// and if the Buffer of the Ring is, at least, of 2 bytes
+	if (ElemSize == 0 || RingLen < 2){
+		return RINGBUFFER_INVALID_PARAMS;
+	}
+	// clears the handle and attribute the Element Size and Ring Len
 	memset(handle, 0, sizeof(RingBuffer_t));
 	handle->ElemSize = ElemSize;
 	handle->RingLen = RingLen;
+	// check if the developer provided an pre-alocated buffer
 	if (buffer == NULL){
+		// if the buffer was Null, use dynamic allocation
 		handle->Ring = malloc(RingLen*ElemSize);
 		if (handle->Ring == NULL){
 			return RINGBUFFER_FAIL;
@@ -37,6 +45,7 @@ RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, uint8_t ElemSize, uint32_t Ri
 	else{
 		handle->Ring = buffer;
 	}
+	// finish handle initialization
 	handle->_isEmpty = 1;
 	handle->_init = RINGBUFFER_INITALIZE_MASK;
 
@@ -51,9 +60,11 @@ RingBuffer_e RingBuffer_Destroy(RingBuffer_t *handle){
 		return RINGBUFFER_NOT_INIT;
 	}
 
-	if (handle->_isDynamic == 1){
+	if (handle->_isDynamic == 1 && handle->Ring != NULL){
+		// free the allocated memory
 		free(handle->Ring);
 	}
+	// clear all parameters of Ring Buffer handle
 	memset(handle, 0, sizeof(RingBuffer_t));
 
 	return RINGBUFFER_OK;
@@ -74,9 +85,13 @@ RingBuffer_e RingBuffer_Push(RingBuffer_t *handle, void* Element){
 		return RINGBUFFER_FULL;
 	}
 	if (handle->_isEmpty == 1){
+		// If the Ring Buffer is empty, when we insert elements
+		// the Ring Buffer is not empty anymore.
 		handle->_isEmpty = 0;
 	}
+	// calculate the offset bytes of the array
 	offset = handle->ElemSize*handle->_head;
+	// copy the data of Element into the Ring Buffer array
 	memcpy((void*)(handle->Ring + offset), Element, handle->ElemSize);
 
 	next = handle->_head + 1;
@@ -109,9 +124,12 @@ RingBuffer_e RingBuffer_Pop(RingBuffer_t *handle, void* Element){
 	}
 	next = handle->_tail + 1;
 	if (next >= handle->RingLen){
+		// We've reached the end of the Buffer, come back to the begin
 		next = 0;
 	}
 	if (handle->_isFull == 1){
+		// if the Buffer is full, and we remove an element,
+		// Te Ring Buffer is not full anymore
 		handle->_isFull = 0;
 	}
 	offset = handle->ElemSize*handle->_tail;
@@ -153,7 +171,9 @@ RingBuffer_e RingBuffer_Clear(RingBuffer_t *handle){
 		return RINGBUFFER_NOT_INIT;
 	}
 
+	// fill the Ring Buffer array with 0's
 	memset(handle->Ring, 0 , handle->RingLen*handle->ElemSize);
+	// reset the state flags
 	handle->_head = 0;
 	handle->_tail = 0;
 	handle->_isFull = 0;

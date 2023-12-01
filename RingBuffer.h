@@ -28,6 +28,7 @@
 typedef enum{
 	RINGBUFFER_OK,
 	RINGBUFFER_FAIL,
+	RINGBUFFER_INVALID_PARAMS,
 	RINGBUFFER_FULL,
 	RINGBUFFER_EMPTY,
 	RINGBUFFER_NOT_INIT,
@@ -36,13 +37,6 @@ typedef enum{
 	RINGBUFFER_UNKNOWN = 0xFF
 }RingBuffer_e;
 
-typedef enum{
-	RINGBUFFER_ELEM_SIZE_8BYTES = 1,
-	RINGBUFFER_ELEM_SIZE_16BYTES = 2,
-	RINGBUFFER_ELEM_SIZE_32BYTES = 4,
-	RINGBUFFER_ELEM_SIZE_64BYTES = 8
-}RingBuffer_Elem_Size_e;
-
 /**
  * Structs
  */
@@ -50,7 +44,7 @@ typedef enum{
 typedef struct{
 	void* Ring;
 	uint32_t RingLen;
-	RingBuffer_Elem_Size_e ElemSize;
+	size_t ElemSize;
 	uint32_t _head;
 	uint32_t _tail;
 	uint8_t _init;
@@ -63,7 +57,7 @@ typedef struct{
  * Publics
  */
 
-RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, RingBuffer_Elem_Size_e ElemSize, uint32_t RingLen, void *buffer);
+RingBuffer_e RingBuffer_Init(RingBuffer_t *handle, size_t ElemSize, uint32_t RingLen, void *buffer);
 
 RingBuffer_e RingBuffer_Destroy(RingBuffer_t *handle);
 
