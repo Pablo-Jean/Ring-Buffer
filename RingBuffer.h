@@ -5,8 +5,8 @@
  *      Author: pablo-jean
  */
 
-#ifndef RINGBUFFER_RINGBUFFER_H_
-#define RINGBUFFER_RINGBUFFER_H_
+#ifndef RING_BUFFER_RINGBUFFER_H_
+#define RING_BUFFER_RINGBUFFER_H_
 
 /**
  * Includes
@@ -70,4 +70,4 @@ RingBuffer_e RingBuffer_State(RingBuffer_t *handle);
 
 RingBuffer_e RingBuffer_Clear(RingBuffer_t *handle);
 
-#endif /* RINGBUFFER_RINGBUFFER_H_ */
+#endif /* RING_BUFFER_RINGBUFFER_H_ */
