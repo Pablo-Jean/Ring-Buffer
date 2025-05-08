@@ -1,5 +1,5 @@
 <center>
-<img src="imgs/logo-education.png"  width="300">
+<img src="pics/logo-education.png"  width="300">
 
 Created for Ouroboros Embedded Education.
 </center>
@@ -13,7 +13,7 @@ V1.0.0
 
 # RingBuffer C Library Documentation
 
-<center><img src="imgs/ring.png"  width="400"></center>
+<center><img src="pics/ring.png"  width="400"></center>
 
 This documentation describes the **RingBuffer** C library, which provides a flexible, type-agnostic ring (circular) buffer implementation for embedded and general-purpose applications. The library supports dynamic or static buffer allocation, efficient push/pop operations, and robust state management.
 
